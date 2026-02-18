@@ -6,6 +6,8 @@ from django.utils.translation import gettext_lazy as _
 from core.constants import MEDIUM_CHAR_LENGTH
 from django.contrib.auth import get_user_model
 
+from product.enums import OrderStatus
+
 USER = get_user_model()
 
 # Create your models here.
@@ -83,3 +85,80 @@ class Client(
     class Meta:
         verbose_name = _("Client")
         verbose_name_plural = _("Clients")
+        
+class Order(
+    BaseModel
+):
+    status = models.CharField(
+        verbose_name=_("Order status"),
+        max_length=10,
+        choices=OrderStatus.choices,
+        default=OrderStatus.PENDING,
+        null=False,
+        blank=False,
+    )
+    
+    client = models.ForeignKey(
+        verbose_name=_("Client"),
+        to=Client,
+        related_name="orders",
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False
+    )
+    
+    products = models.ManyToManyField(
+        verbose_name=_("Products"),
+        to=Product,
+        related_name="orders",
+        through="OrderItem"
+    )
+
+    def __str__(self):
+        return f"{self.pk} - {self.client.__str__()}"
+    
+    class Meta:
+        verbose_name = _("Order")
+        verbose_name_plural = _("Orders")
+        
+class OrderItem(
+    BaseModel
+):
+    order = models.ForeignKey(
+        verbose_name=_("Order"),
+        to=Order,
+        related_name="items",
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False
+    )
+    
+    product = models.ForeignKey(
+        verbose_name=_("Product"),
+        to=Product,
+        related_name="items",
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False
+    )
+    
+    quantity = models.IntegerField(
+        verbose_name=_("Product quantity"),
+        blank=False,
+        null=False,
+        default=1,
+        validators=[
+            MinValueValidator(
+                limit_value=1,
+                message=_("product quantity can't be less then 1")
+            )
+        ],
+        help_text=_("Product quantity, integer , min : 1 ")
+    )
+    
+    def __str__(self):
+        return f"{self.product.name} - {self.order}"
+    
+    class Meta:
+        verbose_name = _("Order item")
+        verbose_name_plural = _("Order items")

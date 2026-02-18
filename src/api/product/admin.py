@@ -3,7 +3,13 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
 #models
-from product.models import Product as ProductModel , Client as ClientModel
+from product.models import Product as ProductModel , Client as ClientModel , Order as OrderModel , OrderItem as OrderItemModel
+
+#inlines
+class OrderItemInline(admin.TabularInline):
+    model = OrderItemModel
+    fields = ["product" , "quantity"]
+    extra = 1
 
 # Register your models here.
 @admin.register(ProductModel)
@@ -14,4 +20,13 @@ class ProductAdmin(admin.ModelAdmin):
     
 @admin.register(ClientModel)
 class ClientAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(OrderModel)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ["client" , "created_at"]
+    inlines = [OrderItemInline]
+
+@admin.register(OrderItemModel)
+class OrderItemAmin(admin.ModelAdmin):
     pass
