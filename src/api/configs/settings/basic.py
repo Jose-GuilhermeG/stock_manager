@@ -51,7 +51,9 @@ DJANGO_APPS = [
 
 THIRDY_APPS = [
     'rest_framework',
-    'django_filters'
+    'django_filters',
+    'drf_spectacular',
+    'drf_spectacular_sidecar'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRDY_APPS
