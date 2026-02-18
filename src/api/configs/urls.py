@@ -5,7 +5,7 @@ from drf_spectacular.views import SpectacularAPIView , SpectacularRedocView , Sp
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('products/' , include(("product.urls","product"),namespace="product"))
+    path('' , include(("product.urls","product"),namespace="product"))
 ]
 
 urlpatterns += [
