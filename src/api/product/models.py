@@ -4,6 +4,9 @@ from django.core.validators import MinValueValidator
 from core.models import BaseModel
 from django.utils.translation import gettext_lazy as _
 from core.constants import MEDIUM_CHAR_LENGTH
+from django.contrib.auth import get_user_model
+
+USER = get_user_model()
 
 # Create your models here.
 class Product(BaseModel):
@@ -59,3 +62,24 @@ class Product(BaseModel):
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
         ordering = ["created_at"]
+        
+
+        
+class Client(
+    BaseModel
+):
+    user = models.OneToOneField(
+        verbose_name=_("Client user"),
+        to=USER,
+        related_name="client_profile",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
+    )
+    
+    def __str__(self):
+        return self.user.username
+    
+    class Meta:
+        verbose_name = _("Client")
+        verbose_name_plural = _("Clients")

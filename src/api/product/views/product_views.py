@@ -6,6 +6,7 @@ from product.models import Product
 from core.minxins import ViewSetGetSerializerClassMixin
 
 # Create your views here.
+
 class ProductViewSet(
     ViewSetGetSerializerClassMixin,
     ModelViewSet
