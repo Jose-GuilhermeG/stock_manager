@@ -1,9 +1,10 @@
 import type { ElementType } from "react";
 import {ChevronRight} from 'lucide-react'
 import { cn } from "@/lib/utils";
-import {Link} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 
-interface NavItems{
+export interface NavItems{
+  id : string,
   label : string,
   icon : ElementType,
   href : string ,
@@ -12,13 +13,17 @@ interface NavItems{
 
 
 export function Sidebar({navItems} : {navItems : Array<NavItems>} ) {
+  const navigate = useNavigate();
+
   return (
     <aside className="w-56 min-h-screen bg-neutral-900 text-neutral-100 flex flex-col py-6 px-3 shrink-0">
       <nav className="flex flex-col gap-1 mt-2">
         {navItems.map((item) => (
-          <Link
+          <button
             key={item.href}
-            to={item.href}
+            onClick={()=>{
+              navigate(item.href,{ state : {current_tab : item.id}})
+            }}
             className={cn(
               "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors group",
               item.active
@@ -31,7 +36,7 @@ export function Sidebar({navItems} : {navItems : Array<NavItems>} ) {
             {item.active && (
               <ChevronRight size={14} className="text-neutral-400" />
             )}
-          </Link>
+          </button>
         ))}
       </nav>
 

@@ -11,6 +11,7 @@ import NotFoundPage from './pages/NotFoundPage'
 
 //tabs
 import HomePage from './pages/Home'
+import StockPage from './pages/stock'
 
 export default function AppicationRoutes(){
     return (
@@ -18,6 +19,7 @@ export default function AppicationRoutes(){
             <Routes>
                 <Route path='/' element={<BasePage/>}>
                     <Route index element={<HomePage/>}/>
+                    <Route path='/stock' element={<StockPage/>}/>
                     <Route path='*' element={<NotFoundPage/>} />
                 </Route>
             </Routes>

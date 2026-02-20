@@ -1,5 +1,5 @@
 //imports
-import {Outlet} from 'react-router-dom'
+import {Outlet , useLocation} from 'react-router-dom'
 import {
   LayoutDashboard,
   Package,
@@ -9,25 +9,41 @@ import {
   Truck,
   Users,
 } from "lucide-react";
+import type { ElementType } from "react";
+
 
 //components
 import { Sidebar } from "@/components/SideBar";
 import { TopHeader } from "@/components/TopHeader";
 
-const navItems = [
-  { label: "Dashboard", icon: LayoutDashboard, href: "/", active: true },
-  { label: "Estoque", icon: Package, href: "/estoque" },
-  { label: "Vendas", icon: ShoppingCart, href: "/vendas" },
-  { label: "Relatórios", icon: BarChart2, href: "/relatorios" },
-  { label: "Fornecedores", icon: Truck, href: "/fornecedores" },
-  { label: "Clientes", icon: Users, href: "/clientes" },
-  { label: "Configurações", icon: Settings, href: "/configuracoes" },
+interface NavItems{
+  id : string,
+  label : string,
+  icon : ElementType,
+  href : string ,
+  active? : boolean
+}
+
+const navItems : Array<NavItems> = [
+  { id : "dasboard" , label: "Dashboard", icon: LayoutDashboard, href: "/" },
+  { id : "stock" , label: "Estoque", icon: Package, href: "/stock" },
+  { id : "Vendas" , label: "Vendas", icon: ShoppingCart, href: "/vendas" },
+  { id : "Relatórios" , label: "Relatórios", icon: BarChart2, href: "/relatorios" },
+  { id : "Fornecedores" , label: "Fornecedores", icon: Truck, href: "/fornecedores" },
+  { id : "Clientes" , label: "Clientes", icon: Users, href: "/clientes" },
+  { id : "Configurações" , label: "Configurações", icon: Settings, href: "/configuracoes" },
 ];
 
 export default function BasePage(){
+    const location = useLocation();
+    const items = navItems.map(item => ({...item,
+    active: location.state?.current_tab === item.id 
+            || (!location.state?.current_tab && item.id === "dasboard")
+    }));
+
     return (
         <div className="flex h-screen bg-neutral-50 font-sans overflow-hidden">
-            <Sidebar navItems={navItems} />
+            <Sidebar navItems={items} />
             <div className="flex-1 flex flex-col overflow-hidden">
                 <TopHeader userName="Guilherme" />
                 <Outlet/>
