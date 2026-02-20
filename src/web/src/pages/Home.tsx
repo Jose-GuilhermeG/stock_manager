@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-import { Sidebar } from "@/components/SideBar";
-import { TopHeader } from "@/components/TopHeader";
 import { StatsCards } from "@/components/StatsCards";
 import { SalesChart } from "@/components/SalesChart";
 
-// Simulated API response shape
 interface DashboardData {
   avgSales: number;
   revenue: number;
@@ -12,9 +9,6 @@ interface DashboardData {
 }
 
 async function fetchDashboardData(): Promise<DashboardData> {
-  // Replace with your real API call:
-  // const res = await fetch("/api/dashboard");
-  // return res.json();
   return new Promise((resolve) =>
     setTimeout(
       () =>
@@ -39,12 +33,6 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="flex h-screen bg-neutral-50 font-sans overflow-hidden">
-      <Sidebar />
-
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <TopHeader userName="Guilherme" />
-
         <main className="flex-1 overflow-y-auto p-6">
           <div className="mb-6">
             <h1 className="text-xl font-semibold text-neutral-900">Dashboard</h1>
@@ -73,7 +61,5 @@ export default function HomePage() {
             </p>
           )}
         </main>
-      </div>
-    </div>
   );
 }
