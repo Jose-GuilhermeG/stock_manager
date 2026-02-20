@@ -1,5 +1,6 @@
 #imports
 from rest_framework import serializers
+from django.utils.translation import gettext_lazy as _
 
 #models
 from product.models import Product , OrderItem , Order
@@ -60,6 +61,14 @@ class OrderCreateSerializer(
     class Meta:
         model = Order
         fields = ["items"]
+        
+    def validate_items(self , list_orders : list[dict]):
+        for order in list_orders:
+            product : Product = order.get("product")
+            order_quantity : int = order.get("quantity" , 1)
+            if product.quantity < order_quantity:
+                raise serializers.ValidationError(_(f"Product '{product.name}' quantity is less then order quantity"))
+        return list_orders
         
     def create(self, validated_data):
         items = validated_data.pop("items")
