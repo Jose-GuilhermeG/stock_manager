@@ -3,11 +3,17 @@ from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
 #models
-from product.models import Product , OrderItem , Order
+from product.models import Product , OrderItem , Order , ProductPhoto
+
+class ProductPhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductPhoto
+        fields = ["photo"]
 
 class ProductSerializer(
     serializers.ModelSerializer
 ):  
+    photos = ProductPhotoSerializer(many=True,read_only=True)
     
     class Meta:
         model = Product

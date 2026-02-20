@@ -7,6 +7,7 @@ from core.constants import MEDIUM_CHAR_LENGTH
 from django.contrib.auth import get_user_model
 
 from product.enums import OrderStatus
+from product.utils import get_product_image_path
 
 USER = get_user_model()
 
@@ -65,7 +66,25 @@ class Product(BaseModel):
         verbose_name_plural = _("Products")
         ordering = ["created_at"]
         
-
+class ProductPhoto(
+    BaseModel
+):
+    
+    product = models.ForeignKey(
+        verbose_name=_("Product"),
+        to=Product,
+        related_name="photos",
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False
+    )
+    
+    photo = models.ImageField(
+        verbose_name=_("Product Photo"),
+        null=False,
+        blank=False,
+        upload_to=get_product_image_path
+    )
         
 class Client(
     BaseModel
