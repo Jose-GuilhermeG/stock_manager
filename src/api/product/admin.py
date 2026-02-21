@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 #models
 from product.models import Product as ProductModel , Client as ClientModel , Order as OrderModel , OrderItem as OrderItemModel , ProductPhoto as ProductPhotoModel
+from core.admin import BaseAdmin
 
 #inlines
 class OrderItemInline(admin.TabularInline):
@@ -18,21 +19,21 @@ class ProductPhotoInline(admin.TabularInline):
 
 # Register your models here.
 @admin.register(ProductModel)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(BaseAdmin):
     list_display = ["name" , "price"]
     search_fields = ["name" , "description"]
     search_help_text = _("search product by name or description")
     inlines = [ProductPhotoInline]
     
 @admin.register(ClientModel)
-class ClientAdmin(admin.ModelAdmin):
+class ClientAdmin(BaseAdmin):
     pass
 
 @admin.register(OrderModel)
-class OrderAdmin(admin.ModelAdmin):
+class OrderAdmin(BaseAdmin):
     list_display = ["client" , "created_at"]
     inlines = [OrderItemInline]
 
 @admin.register(OrderItemModel)
-class OrderItemAmin(admin.ModelAdmin):
+class OrderItemAmin(BaseAdmin):
     pass
