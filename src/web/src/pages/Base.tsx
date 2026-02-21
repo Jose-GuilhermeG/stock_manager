@@ -13,8 +13,8 @@ import type { ElementType } from "react";
 
 
 //components
-import { Sidebar } from "@/components/SideBar";
-import { TopHeader } from "@/components/TopHeader";
+import { Sidebar } from "@/layout/SideBar";
+import { TopHeader } from "@/layout/TopHeader";
 
 interface NavItems{
   id : string,

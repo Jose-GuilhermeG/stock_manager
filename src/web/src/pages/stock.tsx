@@ -1,4 +1,5 @@
 import { useState , useEffect } from "react";
+import camelcaseKeys from "camelcase-keys";
 
 import { Empty , EmptyHeader , EmptyMedia , EmptyContent , EmptyTitle , EmptyDescription } from "@/components/ui/empty";
 import { Card , CardHeader , CardTitle , CardDescription , CardAction , CardContent } from "@/components/ui/card";
@@ -7,35 +8,44 @@ import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
 import { CircleSlash2 , ArrowRight , Box , Search } from "lucide-react";
+import ErrAlert , {type ErrAlertData} from "@/features/errAlert";
 
+import { getProductsService } from "@/services/stockServices";
 
 interface Product{
+    id : number
     name : string,
     price : number,
     quantity : number,
-    src? : string
+    productDetailUrl : string,
+    productPhoto? : string
 }
 
 export default function StockPage() {
     const [loading , setLoading] = useState<boolean>(true)
     const [products , setProducts] = useState<Product[]>([])
-    const ProductsData : Array<Product> = [
-        {name : "Test" , price : 50 , quantity : 2},
-        {name : "Test" , price : 50 , quantity : 2},
-        {name : "Test" , price : 50 , quantity : 2},
-        {name : "Test" , price : 50 , quantity : 2},
-    ]
-
-    async function fetchStockData() : Promise<Product[]> {
-        return new Promise((resolve)=>{
-            setTimeout(()=>{
-                resolve(ProductsData)
-            },0)
-        })
-    }
+    const [Err , setErr] = useState<ErrAlertData>({
+        hasErr : false ,
+        statusCode : 200
+    })
 
     useEffect(()=>{
-        fetchStockData().then(data=>setProducts(data))
+        getProductsService().then(res=>{
+            const data : Product[] = camelcaseKeys(res.data) as Product[]
+            setProducts(data)
+        })
+        .catch(err=>{
+            let statusCode = 500
+
+            if(err.response){
+                statusCode = err.response.status
+            }
+
+            setErr({
+                hasErr : true,
+                statusCode : statusCode
+            })
+        })
         .finally(()=>setLoading(false))
         return 
     },[])
@@ -81,6 +91,7 @@ export default function StockPage() {
                   Produtos monitorados no estoque e seus detalhes
                 </p>
               </div>
+              <ErrAlert {...Err}/>
               <form action="">
                   <FieldSet className="my-10">
                     <FieldLegend>
@@ -120,8 +131,8 @@ export default function StockPage() {
                     {products.map(element=>(
                         <Card className="h-[50vh] relative cursor-pointer">
                             <div className="w-full max-w-sm inset-0 mx-auto pt-0">
-                                {element.src ? 
-                                    <img className="w-full h-full aspect-video"/> :
+                                {element.productPhoto ? 
+                                    <img src={element.productPhoto} className="w-full h-full aspect-video"/> :
                                     <Box className="w-full h-full aspect-video"/>
                                 }
                             </div>

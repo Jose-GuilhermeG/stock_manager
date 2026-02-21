@@ -29,9 +29,19 @@ class ProductListSerializer(
         lookup_field = "pk"
     )
     
+    product_photo = serializers.SerializerMethodField(read_only=True)
+    
+    def get_product_photo(self ,obj : Product)->str:
+        product_photos : list[ProductPhoto] = obj.photos.all()
+        request = self.context.get("request")
+        if not len(product_photos):
+            return ""
+        
+        return request.build_absolute_uri(product_photos[0].photo.url)
+    
     class Meta:
         model = Product
-        fields = ["id" , "name" , "price" , "product_detail_url"]
+        fields = ["id" , "name" , "price" , "product_detail_url" , "product_photo" ,"quantity"]
         
 class OrderItemSerializer(
     serializers.ModelSerializer
