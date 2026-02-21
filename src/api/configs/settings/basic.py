@@ -39,6 +39,7 @@ PROJECT_APPS = [
     'core',
     'product',
     'account',
+    'enterprise',
 ]
 
 DJANGO_APPS = [
