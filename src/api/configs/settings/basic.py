@@ -37,7 +37,8 @@ ALLOWED_HOSTS = []
 
 PROJECT_APPS = [
     'core',
-    'product'
+    'product',
+    'account',
 ]
 
 DJANGO_APPS = [
@@ -55,6 +56,7 @@ THIRDY_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',
     'corsheaders',
+    'rest_framework_simplejwt'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRDY_APPS
