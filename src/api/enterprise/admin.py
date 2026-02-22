@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from enterprise.models import Employment as EmploymentModel , Enterprise as EnterpriseModel
+from enterprise.models import Employment as EmploymentModel , Enterprise as EnterpriseModel , StockItem as StockItemModel
 from core.admin import BaseAdmin
 
 # Register your models here.
@@ -10,4 +10,8 @@ class EnterpriseAdmin(BaseAdmin):
 
 @admin.register(EmploymentModel)
 class EmploymentAdmin(BaseAdmin):
+    pass
+
+@admin.register(StockItemModel)
+class EtockItemAdmin(BaseAdmin):
     pass

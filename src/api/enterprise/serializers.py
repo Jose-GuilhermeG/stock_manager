@@ -2,7 +2,7 @@
 from rest_framework import serializers
 
 #models
-from enterprise.models import Enterprise , Employment
+from enterprise.models import Enterprise , Employment , StockItem
 from enterprise.enums import EmploymentRoles
 
 #serializers
@@ -16,7 +16,9 @@ class EnterpriseSerializer(
     )
     
     def get_owner(self , obj : Enterprise)->str:
-        return obj.employments.filter(role=EmploymentRoles.OWNER).first().user.username
+        query = obj.employments.filter(role=EmploymentRoles.OWNER).first()
+        if query: return query.user.username
+        return "unknow"
     
     class Meta:
         model = Enterprise
@@ -32,3 +34,10 @@ class EnterpriseSerializer(
         )
         
         return enterprise
+    
+class StockItemSerializer(
+    serializers.ModelSerializer
+):
+    class Meta:
+        model = StockItem
+        fields = "__all__"

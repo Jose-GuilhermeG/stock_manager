@@ -59,7 +59,7 @@ class Product(BaseModel):
     )
     
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.id}"
     
     class Meta:
         verbose_name = _("Product")
