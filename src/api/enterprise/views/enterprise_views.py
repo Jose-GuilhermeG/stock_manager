@@ -30,7 +30,7 @@ class EnterpriseViewSet(
     serializer_class = EnterpriseSerializer
     permission_class = [IsAuthenticated]
     permission_per_action = {
-        'reatrive' : IsEnterpriseEmployment,
+        'retrieve' : IsEnterpriseEmployment,
         'destroy' : IsEnterpriseOnwer,
         'update' : IsHighRole,
         'create' : IsAuthenticated

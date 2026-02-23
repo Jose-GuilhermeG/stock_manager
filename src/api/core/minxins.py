@@ -3,7 +3,7 @@ from rest_framework.permissions import BasePermission
 
 class PermissionActionDict(TypedDict):
     list : BasePermission | None
-    reatrive : BasePermission | None
+    retrieve : BasePermission | None
     destroy : BasePermission | None
     create : BasePermission | None
     update : BasePermission | None
