@@ -14,6 +14,7 @@ import HomePage from './pages/Home'
 import StockPage from './pages/stock'
 import NotFoundPage from './pages/NotFoundPage'
 
+
 export default function AppicationRoutes(){
     return (
         <BrowserRouter>

@@ -1,7 +1,9 @@
 //imports
-import React from 'react'
-import {Navigate} from 'react-router-dom'
-import { useState } from 'react'
+import { jwtDecode } from 'jwt-decode';
+import { useState , useEffect , useContext } from 'react'
+import { LoginService } from '@/services/accountServices'
+import {useNavigate} from 'react-router-dom'
+import { AuthContext , type AuthContextType } from '@/context/userContext'
 
 //components
 import { FieldSet , Field , FieldGroup , FieldDescription , FieldLabel , FieldLegend , FieldError , FieldContent , FieldSeparator } from "@/components/ui/field"
@@ -12,39 +14,61 @@ import { Button } from "@/components/ui/button"
 import { Mail , Eye , EyeOff , User } from "lucide-react"
 
 //types
-import { type LoginData , type FormErr } from '@/types/AccountTypes'
+import { type LoginData , type FormErr , type LoginRespose , type AccessTokenPlayload } from '@/types/AccountTypes'
+
 
 export default function LoginPage(){
-    const [loginData , setLoginData] = useState<LoginData>()
     const [loading , setLoading] = useState<boolean>(false)
     const [showPass , setShowPass] = useState<boolean>(false)
+    const navigate = useNavigate()
     const [formErr , setFormErr] = useState<FormErr>({
         hasErr : false,
         field : ""
     })
+    const { setAccessToken , setRefrashToken , setUsername } = useContext(AuthContext) as AuthContextType
 
-    const GetFormAttrs = (form : HTMLFormElement) : LoginData =>{
+    const realizeLogin = async (data : LoginData) =>{
+        setLoading(true)
+        try{
+            const req : LoginRespose = (await LoginService(data)).data
+            setAccessToken(req.access)
+            setRefrashToken(req.refrash)
+            setUsername(jwtDecode<AccessTokenPlayload>(req.access).username)
+            navigate("/")
+        }catch(e){
+
+        }finally{
+            setLoading(false)
+        }
+    }
+
+    const GetFormAttrs = (form : HTMLFormElement) : {data : LoginData , erros : FormErr} =>{
        const formFormat = new FormData(form) 
        const email = formFormat.get("email") as string
        const password = formFormat.get("password") as string
+       const data = {
+        email : email,
+        password : password
+       }
        const message = "esse campo não pode estar vazio"
         
-       if(!email.trim().length) setFormErr({hasErr : true , field : "password",message : message})
+       if(!email.trim().length) return {data : data , erros : {hasErr : true , field : "email",message : message}}
 
-       if(!password.trim().length) setFormErr({hasErr : true , field : "password",message : message})
+       if(!password.trim().length) return {data : data , erros : {hasErr : true , field : "password",message : message}}
 
        return {
-            email : email,
-            password : password
+            data : data,
+            erros : {hasErr : false , field : ""}
        }
     }
 
-    const RealizeLogin = async (e : React.FormEvent<HTMLFormElement>)=>{
+    const formHandler = async (e : React.FormEvent<HTMLFormElement>) : Promise<void> =>{
         e.preventDefault()
         setFormErr({hasErr : false , field : ""})
         const form = e.target as HTMLFormElement
-        setLoginData(GetFormAttrs(form))
-        setLoading(true)
+        const {data , erros} = GetFormAttrs(form)
+        setFormErr(erros)
+        if(!erros.hasErr) realizeLogin(data)
     }
 
     return (
@@ -58,7 +82,7 @@ export default function LoginPage(){
                 <section className="mt-10">
                     <form 
                         className="w-lg min-h-[60vh] bg-white p-4 rounded-2xl shadow-sm border-neutral-200"
-                        onSubmit={(e)=>RealizeLogin(e)}>
+                        onSubmit={(e)=>formHandler(e)}>
                         <FieldSet>
                             <FieldLegend className="w-full flex flex-col justify-center items-center">
                                 <h1 className="text-2xl font-bold my-2">
@@ -132,7 +156,7 @@ export default function LoginPage(){
                                             Não tem Uma conta?
                                         </FieldSeparator>
                                         <Field>
-                                            <Button variant="outline" size="lg" onClick={()=>Navigate({to : "/account/register/"})}>
+                                            <Button variant="outline" size="lg" onClick={()=>navigate("account/register/")}>
                                                 Criar Conta
                                             </Button>
                                         </Field>
