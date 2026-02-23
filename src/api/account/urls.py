@@ -1,6 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView , TokenRefreshView , TokenVerifyView
 
+from account.views import ListUserEnterprises
 
 urlpatterns = [
     path(
@@ -17,5 +18,10 @@ urlpatterns = [
         'token/verify/',
         view=TokenVerifyView.as_view(),
         name='token_verify'
+    ),
+    path(
+        'me/enterprises/',
+        view=ListUserEnterprises.as_view(),
+        name='user-enterprise-list'
     )
 ]
