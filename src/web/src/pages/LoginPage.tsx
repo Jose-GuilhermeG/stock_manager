@@ -32,7 +32,7 @@ export default function LoginPage(){
         try{
             const req : LoginRespose = (await LoginService(data)).data
             setAccessToken(req.access)
-            setRefrashToken(req.refrash)
+            setRefrashToken(req.refresh)
             setUsername(jwtDecode<AccessTokenPlayload>(req.access).username)
             navigate("/")
         }catch(e){

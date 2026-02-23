@@ -10,6 +10,9 @@ import {
   Users,
 } from "lucide-react";
 import type { ElementType } from "react";
+import { useContext } from 'react';
+
+import { AuthContext , type AuthContextType } from "@/context/userContext";
 
 
 //components
@@ -36,6 +39,8 @@ const navItems : Array<NavItems> = [
 
 export default function BasePage(){
     const location = useLocation();
+    const {username} = useContext(AuthContext) as AuthContextType 
+
     const items = navItems.map(item => ({...item,
     active: location.state?.current_tab === item.id 
             || (!location.state?.current_tab && item.id === "dasboard")
@@ -45,7 +50,7 @@ export default function BasePage(){
         <div className="flex h-screen bg-neutral-50 font-sans overflow-hidden">
             <Sidebar navItems={items} />
             <div className="flex-1 flex flex-col overflow-hidden">
-                <TopHeader userName="Guilherme" />
+                <TopHeader userName={username} />
                 <Outlet/>
             </div>
         </div>

@@ -5,7 +5,7 @@ import { SalesChart } from "@/components/SalesChart";
 interface DashboardData {
   avgSales: number;
   revenue: number;
-  stockLevel: number; // 0-100 from API
+  stockLevel: number;
 }
 
 async function fetchDashboardData(): Promise<DashboardData> {

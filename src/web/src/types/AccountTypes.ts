@@ -5,7 +5,7 @@ export interface LoginData{
 
 export interface LoginRespose{
     access : string;
-    refrash : string
+    refresh : string
 }
 
 export interface AccessTokenPlayload{
