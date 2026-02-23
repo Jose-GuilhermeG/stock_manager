@@ -22,7 +22,7 @@ class EnterpriseSerializer(
     
     class Meta:
         model = Enterprise
-        fields = ["name","owner","detail_url"]
+        fields = ["id","name","owner","detail_url"]
         
     def create(self, validated_data : dict):
         user = validated_data.pop("user")

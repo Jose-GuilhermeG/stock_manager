@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, useContext, type FormEvent } from "react";
 import { StatsCards } from "@/components/StatsCards";
 import { SalesChart } from "@/components/SalesChart";
 
@@ -9,17 +9,15 @@ import { Button } from "@/components/ui/button";
 
 import { SquareCheckBig , Building2 } from "lucide-react";
 
+import { AuthContext , type AuthContextType } from "@/context/userContext";
+import { type UserEnterprise } from "@/types/AccountTypes";
+import { getUserEnterprises } from "@/services/enterpriseServices";
+
 interface DashboardData {
   avgSales: number;
   revenue: number;
   stockLevel: number;
 }
-
-interface UserEnterprise{
-  id : number;
-  name : string;
-}
-
 
 async function fetchDashboardData(): Promise<DashboardData> {
   return new Promise((resolve) =>
@@ -37,6 +35,7 @@ async function fetchDashboardData(): Promise<DashboardData> {
 
 export default function HomePage() {
   const [data, setData] = useState<DashboardData | null>(null);
+  const {accessToken} = useContext(AuthContext) as AuthContextType
   const [loading, setLoading] = useState(true);
   const [selectEnterprise , setSelectEnterprise] = useState<UserEnterprise | null>(null)
   const [userEnterprises , setUserEnterprises] = useState<UserEnterprise[]>([
@@ -50,6 +49,10 @@ export default function HomePage() {
     fetchDashboardData()
       .then(setData)
       .finally(() => setLoading(false));
+
+    getUserEnterprises(accessToken).then(res=>{
+      setUserEnterprises(res.data)
+    })
   }, []);
 
   const enterpriseHandler = (e : FormEvent<HTMLFormElement>) : void =>{

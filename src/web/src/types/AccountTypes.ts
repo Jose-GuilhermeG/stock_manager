@@ -1,3 +1,8 @@
+export interface UserEnterprise{
+  id : number;
+  name : string;
+}
+
 export interface LoginData{
     email : string,
     password : string
