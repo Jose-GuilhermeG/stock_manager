@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
 import { CircleSlash2 , ArrowRight , Box , Search } from "lucide-react";
-import ErrAlert , {type ErrAlertData} from "@/features/errAlert";
+import ErrAlert from "@/features/errAlert";
+import { type ApiErr } from "@/types/generalTYpes";
 
 import { getProductsService } from "@/services/stockServices";
 
@@ -24,9 +25,9 @@ interface Product{
 export default function StockPage() {
     const [loading , setLoading] = useState<boolean>(true)
     const [products , setProducts] = useState<Product[]>([])
-    const [Err , setErr] = useState<ErrAlertData>({
+    const [Err , setErr] = useState<ApiErr>({
         hasErr : false ,
-        statusCode : 200
+        code : 200,
     })
 
     useEffect(()=>{
@@ -43,7 +44,7 @@ export default function StockPage() {
 
             setErr({
                 hasErr : true,
-                statusCode : statusCode
+                code : statusCode
             })
         })
         .finally(()=>setLoading(false))

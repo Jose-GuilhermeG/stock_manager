@@ -11,6 +11,40 @@ import Loading from "../Loading";
 
 export default function SelectEnterprise({formHandler , enterprises , loading } : {formHandler : SubmitEventHandler<HTMLFormElement> , enterprises : UserEnterprise[] , loading : boolean}){
 
+    const EmptyMessage = ()=>(
+        <div>
+            <h1 className="m-auto text-center text-[20px] text-wrap w-3/4 capitalize ">
+                Você não esta em nenhuma empresa no momento
+            </h1>
+        </div>
+    )
+
+    const Form = ()=>(
+        <form className="" onSubmit={formHandler}>
+                {
+                    enterprises.length?
+                    <div>
+                        <RadioGroup name="enterprise" defaultValue={enterprises[0].id.toString()}>
+                            {
+                            enterprises.map(element=>(
+                                <div className="w-full flex justify-between items-center hover:bg-neutral-50 py-3">
+                                <Label htmlFor={element.name} className="w-full text-[16px] cursor-pointer">
+                                    {element.name}
+                                </Label>
+                                <RadioGroupItem id={element.name} value={element.id.toString()}/>
+                                </div>
+                            ))
+                            }
+                        </RadioGroup>
+                        <Button className="my-2 w-full">
+                            Selecionar
+                        </Button>
+                    </div>:
+                <EmptyMessage/>
+                }
+        </form>
+    )
+
     return (
         <AlertDialog open>
         <AlertDialogContent>
@@ -26,25 +60,7 @@ export default function SelectEnterprise({formHandler , enterprises , loading } 
           {
             loading ? 
             <Loading/> :
-            <form className="" onSubmit={formHandler}>
-                {enterprises.length &&
-                    <RadioGroup name="enterprise" defaultValue={enterprises[0].id.toString()}>
-                        {
-                        enterprises.map(element=>(
-                            <div className="w-full flex justify-between items-center hover:bg-neutral-50 py-3">
-                            <Label htmlFor={element.name} className="w-full text-[16px] cursor-pointer">
-                                {element.name}
-                            </Label>
-                            <RadioGroupItem id={element.name} value={element.id.toString()}/>
-                            </div>
-                        ))
-                        }
-                    </RadioGroup>
-                }
-                <Button className="my-2 w-full">
-                    Selecionar
-                </Button>
-            </form>
+            <Form/>
         }
         </AlertDialogContent>
       </AlertDialog>

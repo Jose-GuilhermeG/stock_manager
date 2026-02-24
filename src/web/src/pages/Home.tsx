@@ -6,6 +6,9 @@ import { AuthContext , type AuthContextType } from "@/context/userContext";
 import { type UserEnterprise } from "@/types/AccountTypes";
 import { getUserEnterprises } from "@/services/enterpriseServices";
 import Loading from "@/features/Loading";
+import ErrAlert from "@/features/errAlert";
+import { type ApiErr } from "@/types/generalTYpes";
+import type { AxiosError } from "axios";
 
 interface DashboardData {
   avgSales: number;
@@ -34,6 +37,7 @@ export default function HomePage() {
   const [loadingUserEnterpriseData, setLoadingUserEnterpriseData] = useState<boolean>(true);
   const [selectEnterprise , setSelectEnterprise] = useState<UserEnterprise | null>(null)
   const [userEnterprises , setUserEnterprises] = useState<UserEnterprise[]>([])
+  const [Err , setErr] = useState<ApiErr>()
 
   useEffect(() => {
     fetchDashboardData()
@@ -43,14 +47,25 @@ export default function HomePage() {
     getUserEnterprises(accessToken).then(res=>{
       setUserEnterprises(res.data)
     })
-    .catch(err=>{
-      console.log(err)
-      setUserEnterprises([])
+    .catch((err : AxiosError)=>{
+      const hasErr = true
+      let code = 500
+      let message = undefined
+      if(err.response) code = err.status as number
+      
+      setErr({
+        hasErr : hasErr,
+        code : code,
+        message : message,
+      })
+      
     })
     .finally(()=>{
       setLoadingUserEnterpriseData(false)
     })
   }, []);
+  
+  if(Err?.hasErr) return <ErrAlert {...Err} />
 
   const enterpriseHandler = (e : FormEvent<HTMLFormElement>) : void =>{
     e.preventDefault()
@@ -69,6 +84,7 @@ export default function HomePage() {
     </section>
     </main>
   )
+
 
   return (
         <main className="flex-1 overflow-y-auto p-6">
