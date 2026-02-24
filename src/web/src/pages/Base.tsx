@@ -8,6 +8,7 @@ import {
   Settings,
   Truck,
   Users,
+  PackageSearch
 } from "lucide-react";
 import type { ElementType } from "react";
 import { useContext } from 'react';
@@ -30,6 +31,7 @@ interface NavItems{
 const navItems : Array<NavItems> = [
   { id : "dasboard" , label: "Dashboard", icon: LayoutDashboard, href: "/" },
   { id : "stock" , label: "Estoque", icon: Package, href: "/stock" },
+  { id : "products" , label: "Produtos", icon: PackageSearch, href: "/products" },
   { id : "Vendas" , label: "Vendas", icon: ShoppingCart, href: "/vendas" },
   { id : "Relatórios" , label: "Relatórios", icon: BarChart2, href: "/relatorios" },
   { id : "Fornecedores" , label: "Fornecedores", icon: Truck, href: "/fornecedores" },
