@@ -4,9 +4,9 @@ import { type  AccessTokenPlayload } from "@/types/AccountTypes";
 
 export interface AuthContextType{
     accessToken : string;
-    refrashToken : string;
+    refreshToken : string;
     setAccessToken : (access : string) => void
-    setRefrashToken : (refrash : string) => void
+    setRefreshToken : (refrash : string) => void
     username : string;
     setUsername : (username : string)=>void
 }
@@ -14,28 +14,37 @@ export interface AuthContextType{
 export const AuthContext = createContext<AuthContextType | null>(null)
 
 export function AuthProvider({children} : {children : React.ReactNode}){
-    const getUsername = (data : string) : string =>{
-        if(data.length) return jwtDecode<AccessTokenPlayload>(data).username
-        return 'unknow'
-    }
-
+    
     const [accessToken , setAccessTokenState] = useState<string>((localStorage.getItem("accessToken") || ''))
-    const [refrashToken , setRefrashTokenState] = useState<string>((localStorage.getItem("refrashToken") || ''))
-    const [username , setUsername] = useState<string>(getUsername(accessToken))
-
+    const [refreshToken , setRefreshTokenState] = useState<string>((localStorage.getItem("refreshToken") || ''))
+    const [username , setUsernameState] = useState<string>((localStorage.getItem("username") || 'unknow'))
+    
     const setToken = (token : string , tokenName : 'accessToken' | 'refreshToken') : void => localStorage.setItem(tokenName , token)
-
+    
     const setAccessToken = (token : string) => {
         setToken(token , 'accessToken')
         setAccessTokenState(token)
     }
-    const setRefrashToken = (token : string) => {
+
+    const setRefreshToken = (token : string) => {
         setToken(token , 'refreshToken')
-        setRefrashTokenState(token)
+        setRefreshTokenState(token)
+    }
+
+    const setUsername = (data : string) =>{
+        let name = 'unknow'
+        try{
+            name = jwtDecode<AccessTokenPlayload>(data).username
+            setUsername(name)
+        }catch(e){
+            console.log(e)
+        }finally{
+            localStorage.setItem('username',name)
+        }
     }
 
     return (
-        <AuthContext.Provider value={{accessToken , setAccessToken , refrashToken , setRefrashToken , username , setUsername}}>
+        <AuthContext.Provider value={{accessToken , setAccessToken , refreshToken , setRefreshToken , username , setUsername}}>
             {children}
         </AuthContext.Provider>
     )

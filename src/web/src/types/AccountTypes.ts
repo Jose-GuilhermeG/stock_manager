@@ -1,3 +1,13 @@
+export interface AcessToken{
+    access : string;
+}
+
+export interface RefreshToken{
+    refresh : string
+}
+
+export interface LoginRespose extends AcessToken , RefreshToken{}
+
 export interface UserEnterprise{
   id : number;
   name : string;
@@ -6,11 +16,6 @@ export interface UserEnterprise{
 export interface LoginData{
     email : string,
     password : string
-}
-
-export interface LoginRespose{
-    access : string;
-    refresh : string
 }
 
 export interface AccessTokenPlayload{
@@ -27,3 +32,19 @@ export interface FormErr{
     field : string,
     message? : string
 }
+
+export interface TokenVerifyData{
+    token : string;
+}
+
+
+export interface HttpHeader{
+    headers : Record<string , string>
+}
+
+export interface AuthorizationHeader extends HttpHeader{
+    headers : {
+        Authorization : string
+    }
+} 
+

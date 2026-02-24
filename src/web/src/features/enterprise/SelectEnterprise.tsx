@@ -27,6 +27,7 @@ export default function SelectEnterprise({formHandler , enterprises , loading } 
             loading ? 
             <Loading/> :
             <form className="" onSubmit={formHandler}>
+                {enterprises.length &&
                     <RadioGroup name="enterprise" defaultValue={enterprises[0].id.toString()}>
                         {
                         enterprises.map(element=>(
@@ -39,6 +40,7 @@ export default function SelectEnterprise({formHandler , enterprises , loading } 
                         ))
                         }
                     </RadioGroup>
+                }
                 <Button className="my-2 w-full">
                     Selecionar
                 </Button>

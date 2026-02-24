@@ -4,6 +4,7 @@ import {
     Routes
 }
 from 'react-router-dom' 
+import { AuthenticateVerify  } from './components/ProtectedRoute/AuthenticateVerify'
 
 //pages
 import BasePage from './pages/Base'
@@ -20,11 +21,15 @@ export default function AppicationRoutes(){
         <BrowserRouter>
             <Routes>
                 <Route path='/account/login/' element={<LoginPage/>} />
-                <Route path='/' element={<BasePage/>}>
-                    <Route index element={<HomePage/>}/>
-                    <Route path='/stock' element={<StockPage/>}/>
-                    <Route path='*' element={<NotFoundPage/>} />
-                </Route>
+                    <Route path='/' element={<BasePage/>}>
+                        <Route index element={
+                            <AuthenticateVerify>
+                                <HomePage/>
+                            </AuthenticateVerify>
+                        }/>
+                        <Route path='/stock' element={<StockPage/>}/>
+                        <Route path='*' element={<NotFoundPage/>} />
+                    </Route>
             </Routes>
         </BrowserRouter>
     )

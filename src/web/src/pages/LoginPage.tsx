@@ -25,15 +25,15 @@ export default function LoginPage(){
         hasErr : false,
         field : ""
     })
-    const { setAccessToken , setRefrashToken , setUsername } = useContext(AuthContext) as AuthContextType
+    const { setAccessToken , setRefreshToken , setUsername } = useContext(AuthContext) as AuthContextType
 
     const realizeLogin = async (data : LoginData) =>{
         setLoading(true)
         try{
             const req : LoginRespose = (await LoginService(data)).data
             setAccessToken(req.access)
-            setRefrashToken(req.refresh)
-            setUsername(jwtDecode<AccessTokenPlayload>(req.access).username)
+            setRefreshToken(req.refresh)
+            setUsername(req.access)
             navigate("/")
         }catch(e){
 

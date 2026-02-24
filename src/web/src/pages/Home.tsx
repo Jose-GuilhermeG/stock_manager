@@ -42,7 +42,12 @@ export default function HomePage() {
 
     getUserEnterprises(accessToken).then(res=>{
       setUserEnterprises(res.data)
-    }).finally(()=>{
+    })
+    .catch(err=>{
+      console.log(err)
+      setUserEnterprises([])
+    })
+    .finally(()=>{
       setLoadingUserEnterpriseData(false)
     })
   }, []);
