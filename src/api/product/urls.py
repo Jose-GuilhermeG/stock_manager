@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework.routers import SimpleRouter
 from product.views.product_views import ProductViewSet
-from product.views.order_views import OrderViewSet
+from product.views.order_views import OrderViewSet , ShowSellAvg
 
 router = SimpleRouter()
 router.register(
@@ -16,7 +16,10 @@ router.register(
 )
 
 urlpatterns = [
-    
+    path(
+        'orders/avg/',
+        ShowSellAvg
+    )
 ]
 
 urlpatterns += router.urls
