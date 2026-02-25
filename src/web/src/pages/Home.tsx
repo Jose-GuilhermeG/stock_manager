@@ -4,7 +4,7 @@ import { SalesChart } from "@/components/SalesChart";
 import SelectEnterprise from "@/features/enterprise/SelectEnterprise";
 import { AuthContext , type AuthContextType } from "@/context/userContext";
 import { type UserEnterprise } from "@/types/AccountTypes";
-import { getUserEnterprises } from "@/services/enterpriseServices";
+import { getUserEnterprises , getEnterpriseSellsAvg } from "@/services/enterpriseServices";
 import Loading from "@/features/Loading";
 import ErrAlert from "@/features/errAlert";
 import { type ApiErr } from "@/types/generalTYpes";
@@ -16,34 +16,43 @@ interface DashboardData {
   stockLevel: number;
 }
 
-async function fetchDashboardData(): Promise<DashboardData> {
-  return new Promise((resolve) =>
-    setTimeout(
-      () =>
-        resolve({
-          avgSales: 342,
-          revenue: 128_450.75,
-          stockLevel: 67,
-        }),
-      600
-    )
-  );
-}
 
 export default function HomePage() {
-  const [data, setData] = useState<DashboardData | null>(null);
+  const [data, setData] = useState<DashboardData | null>();
   const {accessToken} = useContext(AuthContext) as AuthContextType
   const [loadingDashboardData, setLoadingDashboardData] = useState(true);
   const [loadingUserEnterpriseData, setLoadingUserEnterpriseData] = useState<boolean>(true);
   const [selectEnterprise , setSelectEnterprise] = useState<UserEnterprise | null>(null)
   const [userEnterprises , setUserEnterprises] = useState<UserEnterprise[]>([])
   const [Err , setErr] = useState<ApiErr>()
+  
+  const fetchDashboardData = async ()=>{
+    try{
+      const avgSales = (await getEnterpriseSellsAvg(accessToken , selectEnterprise?.id as number)).data.avg
+      const revenue = 128_450.75
+      const stockLevel= 67
+      setData({
+        avgSales : avgSales,
+        revenue : revenue,
+        stockLevel : stockLevel
+      })
+    }catch(e){
+      const hasErr = true
+      let code = 500
+      let message = undefined
+      setErr({
+        hasErr : hasErr,
+        code : code,
+        message : message,
+      })
+    }finally{
+      setLoadingDashboardData(false)
+    }
+  }
+
 
   useEffect(() => {
-    fetchDashboardData()
-      .then(setData)
-      .finally(() => setLoadingDashboardData(false));
-
+    if (selectEnterprise) fetchDashboardData()
     getUserEnterprises(accessToken).then(res=>{
       setUserEnterprises(res.data)
     })
@@ -58,12 +67,13 @@ export default function HomePage() {
         code : code,
         message : message,
       })
-      
+
     })
     .finally(()=>{
       setLoadingUserEnterpriseData(false)
     })
-  }, []);
+      
+  }, [selectEnterprise]);
   
   if(Err?.hasErr) return <ErrAlert {...Err} />
 

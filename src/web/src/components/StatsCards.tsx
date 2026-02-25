@@ -51,7 +51,7 @@ export function StatsCards({ avgSales, revenue, stockLevel }: StatsCardsProps) {
         <p className="text-2xl font-semibold text-neutral-900">
           {avgSales.toLocaleString("pt-BR")}
         </p>
-        <p className="text-xs text-neutral-400 mt-1">unidades / dia</p>
+        <p className="text-xs text-neutral-400 mt-1">unidades / mes</p>
       </div>
 
       <div className="bg-white border border-neutral-200 rounded-xl p-4 shadow-sm">

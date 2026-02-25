@@ -8,7 +8,8 @@ from django.utils.timezone import localtime
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from datetime import datetime
-
+from rest_framework import status
+from django.db.models.aggregates import Sum
 
 from core.minxins import ViewSetGetSerializerClassMixin , ViewSetAddPermissionPerActionMixin
 from enterprise.serializers import EnterpriseSerializer
@@ -82,16 +83,15 @@ class ShowSellAvg(
         return (finishi - started).days + 1
     
     def get_queryset(self , **filters):
-        return OrderItem.objects.filter(**filters)
+        return OrderItem.objects.filter(**filters).aggregate(Sum('quantity'))['quantity__sum'] or 0
     
     def get(self , request , enterprise_id):
-        ordersQuantity = 0
         today , first_day = self.get_dates()
         days_passed =  self.get_time_interval(first_day , today)
-        query = self.get_queryset(
+        ordersQuantity = self.get_queryset(
             order__status = OrderStatus.COMPLETED , 
             product__stock__enterprise__id = enterprise_id , 
-            created_at__range=(first_day , today) )
-        for item in query: ordersQuantity += item.quantity
+            created_at__range=(first_day , today) 
+        )     
         orderAvg = round(ordersQuantity / days_passed , 2)
-        return Response(orderAvg)
+        return Response({"avg" : orderAvg} , status=status.HTTP_200_OK)
