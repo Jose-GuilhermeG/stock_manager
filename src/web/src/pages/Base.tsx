@@ -8,13 +8,14 @@ import {
   Settings,
   Truck,
   Users,
-  PackageSearch
+  PackageSearch,
+  Building2
 } from "lucide-react";
 import type { ElementType } from "react";
 import { useContext } from 'react';
 
 import { AuthContext , type AuthContextType } from "@/context/userContext";
-
+import { EnterpriseProvider } from '@/context/enterpriseContext';
 
 //components
 import { Sidebar } from "@/layout/SideBar";
@@ -36,6 +37,7 @@ const navItems : Array<NavItems> = [
   { id : "Relatórios" , label: "Relatórios", icon: BarChart2, href: "/relatorios" },
   { id : "Fornecedores" , label: "Fornecedores", icon: Truck, href: "/fornecedores" },
   { id : "Clientes" , label: "Clientes", icon: Users, href: "/clientes" },
+  { id : "Enterprises" , label: "empresas", icon: Building2, href: "/enterprises" },
   { id : "Configurações" , label: "Configurações", icon: Settings, href: "/configuracoes" },
 ];
 
@@ -49,12 +51,14 @@ export default function BasePage(){
     }));
 
     return (
-        <div className="flex h-screen bg-neutral-50 font-sans overflow-hidden">
-            <Sidebar navItems={items} />
-            <div className="flex-1 flex flex-col overflow-hidden">
-                <TopHeader userName={username} />
-                <Outlet/>
-            </div>
-        </div>
+      <EnterpriseProvider>
+          <div className="flex h-screen bg-neutral-50 font-sans overflow-hidden">
+              <Sidebar navItems={items} />
+              <div className="flex-1 flex flex-col overflow-hidden">
+                  <TopHeader userName={username} />
+                  <Outlet/>
+              </div>
+          </div>
+      </EnterpriseProvider>
     )
 }

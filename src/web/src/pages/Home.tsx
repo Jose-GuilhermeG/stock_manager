@@ -9,6 +9,7 @@ import Loading from "@/features/Loading";
 import ErrAlert from "@/features/errAlert";
 import { type ApiErr } from "@/types/generalTYpes";
 import type { AxiosError } from "axios";
+import { SelectEnterpriseContext , type EnterpriseContextType } from "@/context/enterpriseContext";
 
 interface DashboardData {
   avgSales: number;
@@ -22,13 +23,13 @@ export default function HomePage() {
   const {accessToken} = useContext(AuthContext) as AuthContextType
   const [loadingDashboardData, setLoadingDashboardData] = useState(true);
   const [loadingUserEnterpriseData, setLoadingUserEnterpriseData] = useState<boolean>(true);
-  const [selectEnterprise , setSelectEnterprise] = useState<UserEnterprise | null>(null)
   const [userEnterprises , setUserEnterprises] = useState<UserEnterprise[]>([])
   const [Err , setErr] = useState<ApiErr>()
+  const { enterpriseSelected, setEnterpriseSelected} = useContext(SelectEnterpriseContext) as EnterpriseContextType
   
   const fetchDashboardData = async ()=>{
     try{
-      const avgSales = (await getEnterpriseSellsAvg(accessToken , selectEnterprise?.id as number)).data.avg
+      const avgSales = (await getEnterpriseSellsAvg(accessToken , enterpriseSelected?.id as number)).data.avg
       const revenue = 128_450.75
       const stockLevel= 67
       setData({
@@ -52,7 +53,7 @@ export default function HomePage() {
 
 
   useEffect(() => {
-    if (selectEnterprise) fetchDashboardData()
+    if (enterpriseSelected) fetchDashboardData()
     getUserEnterprises(accessToken).then(res=>{
       setUserEnterprises(res.data)
     })
@@ -73,7 +74,7 @@ export default function HomePage() {
       setLoadingUserEnterpriseData(false)
     })
       
-  }, [selectEnterprise]);
+  }, [enterpriseSelected]);
   
   if(Err?.hasErr) return <ErrAlert {...Err} />
 
@@ -84,10 +85,10 @@ export default function HomePage() {
 
     const selected = formData.get("enterprise")?.toString()
     const enterprise = userEnterprises.find(element=>element.id.toString() == selected) as UserEnterprise
-    setSelectEnterprise(enterprise)
+    setEnterpriseSelected(enterprise)
   }
 
-  if (!selectEnterprise ) return (
+  if (!enterpriseSelected ) return (
     <main>
     <section> 
       <SelectEnterprise formHandler={enterpriseHandler} enterprises={userEnterprises} loading={loadingUserEnterpriseData}/>
