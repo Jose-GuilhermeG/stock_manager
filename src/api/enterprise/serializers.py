@@ -1,5 +1,6 @@
 #imports
 from rest_framework import serializers
+from product.serializers import ProductListSerializer
 
 #models
 from enterprise.models import Enterprise , Employment , StockItem
@@ -38,6 +39,9 @@ class EnterpriseSerializer(
 class StockItemSerializer(
     serializers.ModelSerializer
 ):
+    product = ProductListSerializer()
+    
     class Meta:
         model = StockItem
-        fields = "__all__"
+        fields = ['id','product','updated_at','is_active']
+        
