@@ -36,6 +36,10 @@ urlpatterns = [
         , stock_detail, 
         name='enterprise-stock-detail'
     ),
+    path(
+        '<int:enterprise_id>/sells/avg/',
+        view=enterprise_views.ShowSellAvg.as_view()
+    )
 ]
 
 urlpatterns += router.urls
