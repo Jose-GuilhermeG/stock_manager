@@ -1,3 +1,5 @@
+import { type JSX } from "react"
+
 export interface HasErr{
     hasErr : boolean
 }
@@ -18,4 +20,14 @@ export interface CodeErr {
 
 export interface ApiErr extends CodeErr , ErrorMessage , HasErr{
     fields? : string[]
+}
+
+export interface ComponentesProps{
+    className? : string;
+    onClick? : (e : React.MouseEvent<HTMLDivElement>)=>void;
+    props? : JSX.ElementAttributesProperty
+}
+
+export interface HasChildrenProps extends ComponentesProps{
+    children : JSX.Element | JSX.Element[] | string;
 }

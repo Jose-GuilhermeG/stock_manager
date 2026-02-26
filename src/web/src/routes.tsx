@@ -14,6 +14,7 @@ import LoginPage from './pages/LoginPage'
 import HomePage from './pages/Home'
 import StockPage from './pages/stock'
 import NotFoundPage from './pages/NotFoundPage'
+import EnterprisesPage from './pages/EnterprisesPage'
 
 
 export default function AppicationRoutes(){
@@ -28,6 +29,7 @@ export default function AppicationRoutes(){
                             </AuthenticateVerify>
                         }/>
                         <Route path='/stock' element={<StockPage/>}/>
+                        <Route path='/enterprises' element={<EnterprisesPage/>} />
                         <Route path='*' element={<NotFoundPage/>} />
                     </Route>
             </Routes>

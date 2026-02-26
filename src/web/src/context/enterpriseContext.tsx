@@ -10,8 +10,12 @@ export const SelectEnterpriseContext = createContext<EnterpriseContextType | nul
 
 export function EnterpriseProvider({children} : {children : React.ReactNode}){
     
-    const [enterpriseSelected , setEnterpriseSelected] = useState<UserEnterprise>()
+    const [enterpriseSelected , setEnterpriseSelectedState] = useState<UserEnterprise>(localStorage.getItem("enterpriseSelected") ? JSON.parse(localStorage.getItem("enterpriseSelected") as string) : undefined)
     
+    function setEnterpriseSelected(enterprise : UserEnterprise){
+        setEnterpriseSelectedState(enterprise)
+        localStorage.setItem("enterpriseSelected", JSON.stringify(enterprise))
+    }
 
     return (
         <SelectEnterpriseContext.Provider value={{enterpriseSelected , setEnterpriseSelected}}>
